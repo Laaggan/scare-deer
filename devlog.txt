@@ -1,0 +1,26 @@
+# 2026-01-31
+I need to push a bit to just get something done with this project. The clean solution would be to find a solution to the numpy compatibility between picamera2 and pytorch.
+This is extremely boring and I have put this away due to the boringness now multiple times so I just have to push and find a solution.
+A terrible but workable architecture for this application would be to run two separate processes where one handles image capture and one handles image analysis.
+Just saying this it does not seem to bad but since these need to have interoperability and some kind of IPC it gets more messy.
+
+Image capture process will take an image every X seconds and then it will trigger an image analysis. If the image analysis contains an object (maybe even specifically
+an animal) then that would change the other process to run every Y seconds (Y < X) for more data capture of the animals in the garden. 
+I guess there could be an analysis bottleneck here somewhere where if there is to many images captured (don't need to overthink this,
+but is probably cannot perform analysis on every image when taking images with a highher frequency)
+
+
+
+After a short discussion with the oracle chegpt we have decided on the architecture. Which is basically the one mentioned above.
+
+IPC with file
+keep a json file on disk which can be read and written from both processes?
+If writing from both processes to this shared file you would have to have some mutex mechanism
+There exists something like https://docs.python.org/3/library/fcntl.html but this put me down an unnecessary rabbit hole since now I am just pushing to get
+something functional. So lets say that just the analysis process gets to write to the IPC file and the camera process only reads it.
+
+Camera process:
+Will read the IPC file and see what frequency it will take images
+
+Analysis process:
+Will analyse the latest image in the image folder and then write to the IPC file if camera process should capture with high frequency or not

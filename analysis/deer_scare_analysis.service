@@ -1,0 +1,13 @@
+[Unit]
+Description=Scare Deer Analysis
+After=multi-user.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/lag/repos/scare-deer/analysis
+ExecStart=/home/lag/repos/scare-deer/analysis/venv/bin/python analysis_job.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
