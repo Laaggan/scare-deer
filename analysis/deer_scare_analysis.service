@@ -1,6 +1,7 @@
 [Unit]
 Description=Scare Deer Analysis
 After=multi-user.target
+BindsToPartOf=deer_scare_camera.service
 
 [Service]
 Type=simple
