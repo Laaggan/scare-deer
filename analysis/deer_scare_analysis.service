@@ -1,12 +1,12 @@
 [Unit]
 Description=Scare Deer Analysis
 After=multi-user.target
-BindsToPartOf=deer_scare_camera.service
+BindsTo=deer_scare_camera.service
 
 [Service]
 Type=simple
-WorkingDirectory=/home/lag/repos/scare-deer/analysis
-ExecStart=/home/lag/repos/scare-deer/analysis/venv/bin/python analysis_job.py
+WorkingDirectory=/opt/scare-deer/scare-deer/analysis
+ExecStart=/opt/scare-deer/scare-deer/analysis/.analysis_env/bin/python /opt/scare-deer/scare-deer/analysis/analysis_job.py
 Restart=on-failure
 RestartSec=3
 
