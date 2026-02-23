@@ -3,14 +3,15 @@ import os
 from time import sleep
 import torch
 import json
+import shutil
 
 # TODO: move to environment variables
-latest_image_path = "/home/llag/repos/scare-deer/shared/images/latest.jpg"
-ipc_path = "/home/llag/repos/scare-deer/shared/ipc.json"
-dear_proxies_path = "/home/llag/repos/scare-deer/shared/dear_proxies.json"
+latest_image_path = "../shared/images/latest.jpg"
+ipc_path = "../shared/ipc.json"
+dear_proxies_path = "../shared/dear_proxies.json"
 time_format = "%Y%m%d-%H%M%S"
 ipc_obj = None
-long_sleep = 15
+long_sleep = 1
 short_sleep = 1
 
 # TODO: move to utils
@@ -63,7 +64,10 @@ while 1:
                 print("Detected animal. Setting operating mode to fast and saving inference")
                 set_operating_mode(OperatingMode.Fast)
                 image_name = real_image_path.split("/")[-1].split(".")[0]
-                inferences.to_pickle(f"/home/llag/repos/scare-deer/shared/inferences/{image_name}.pkl")
+                file_name = image_name = real_image_path.split("/")[-1]
+                #TODO: I should probably have some mechanism for movie capture start and stop
+                shutil.copyfile(real_image_path, f"../shared/inferences/{file_name}")
+                inferences.to_pickle(f"../shared/inferences/{image_name}.pkl")
                 break
             else:
                 print("Found no animal in detection. Setting operating mode to slow")
