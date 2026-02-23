@@ -1,1 +1,4 @@
 .*_env
+shared/images/*
+shared/inferences/*
+yolov5s.pt
