@@ -3,7 +3,7 @@ import time
 import datetime
 import json
 import os
-from picamera2 import Picamera2
+from picamera2 import Picamera2, Preview
 
 picam2 = Picamera2()
 # TODO: take in from env

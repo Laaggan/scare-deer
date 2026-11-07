@@ -1,3 +1,4 @@
+## The following requirements were added by pip freeze:
 altgraph==0.17.5
 certifi==2026.1.4
 charset-normalizer==3.4.4
@@ -9,6 +10,7 @@ fsspec==2026.1.0
 gitdb==4.0.12
 GitPython==3.1.46
 idna==3.11
+iniconfig==2.3.1
 Jinja2==3.1.6
 kiwisolver==1.4.9
 MarkupSafe==3.0.3
@@ -20,12 +22,15 @@ opencv-python==4.13.0.90
 packaging==26.0
 pandas==3.0.0
 pillow==12.1.0
+pluggy==1.7.0
 polars==1.37.1
 polars-runtime-32==1.37.1
 psutil==7.2.2
+Pygments==2.21.0
 pyinstaller==6.18.0
 pyinstaller-hooks-contrib==2026.0
 pyparsing==3.3.2
+pytest==9.2.0
 python-dateutil==2.9.0.post0
 PyYAML==6.0.3
 requests==2.32.5

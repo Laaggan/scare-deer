@@ -24,3 +24,43 @@ Will read the IPC file and see what frequency it will take images
 
 Analysis process:
 Will analyse the latest image in the image folder and then write to the IPC file if camera process should capture with high frequency or not
+
+# 2026-02-01
+Today I pushed through and now have a first version of an application which captures images in slow intervals until the analysis determines there is an animal
+in the image, and raising the image capture frequency in that case.
+
+This has a bunch of flaws though. That if the sleeps in the different processes are not timed well there could be a really long delay and
+you might even miss capturing many images of the animals all together. 
+
+It is not a packaged neatly. But you need very specific hardware and software for this anyways so maybe this is overkill. But I also want to be
+able to deploy it without having a version of the repo, or can I just have a copy of the repo in the bin folder and run it from there?
+
+But still need to move some duplicated functionality to a utils file or module or something.
+
+But I did the important thing and pushed through and got something working.
+
+
+# 2026-02-06
+Okay, so now we are here again. So I guess todays goal is to make some kind of installation package and script so I can do development
+and in theory deploy it to the pi remotely or so on. Creating an installer or python exe or something. 
+
+What is the outline of this requirement?
+I have 2 services so far. (There will be a third for syncing/moving files to the server. MVP Linus!!!! do not get side tracked. 
+Tomorrow you can implement network syncing)
+
+I want to run these services with systemd. Is creating a portable possible with python?
+
+
+# 2026-02-21
+I feel my motivation for this project. Declining everyday but I got to keep pushing to get something working. I was feeling that doing the network 
+sync of images was getting out of hand complexity wise. It is NOT required for the test runs. Just create something runnable and deploy the damn thing
+and try to record the cat and see what happens.
+Also a test suite would be nice, but this is not a production system or something that you maybe ever will touch again. JUST... DEPLOY... IT...
+
+
+# 2026-11-7
+So I decided to finish my C++ course before continuing with this project. That evidently took 10 months..... But here we are; I think I got discouraged
+when I did a test deploy to detect our cat in our apartment before trying to deploy it in the wild and it didn't manage to detect the cat for some reason.
+So today I finally came to making a small test suite so I am not bound by manual testing and can maybe figure out why the cat was not detected.
+Next step I guess is to create some fixture for testing E2E-system maybe? A fake camera where I can add some images to validate the IPC and
+slow vs fast recording modes.
