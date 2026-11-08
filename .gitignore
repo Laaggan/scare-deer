@@ -3,3 +3,4 @@ shared/images/*
 shared/inferences/*
 yolov5s.pt
 __pycache__
+tests/test_data

@@ -4,26 +4,19 @@ import datetime
 import json
 import os
 from picamera2 import Picamera2, Preview
+from utils import IpcData, OperatingMode, ipc_data_from_path
 
 picam2 = Picamera2()
-# TODO: take in from env
 time_format = "%Y%m%d-%H%M%S"
-ipc_path = "../shared/ipc.json"
-images_path = "../shared/images"
+ipc_path = os.getenv("IPC_PATH")
+ipc_obj = ipc_data_from_path(ipc_path)
+
+images_path = os.getenv("IMAGES_PATH")
 long_sleep = 1
 short_sleep = 0.1
 start_time = datetime.datetime.now()
 cleanup_interval = datetime.timedelta(seconds=30)
 cleanup_rate = 10
-
-# TODO: move to utils
-def get_operating_mode():
-    global ipc_path
-    with open(ipc_path, 'r') as ipc_file:
-        ipc_obj = json.loads(ipc_file.read())
-    
-    return ipc_obj["mode"]
-
 
 def cleanup(clean_until_time):
     print(clean_until_time)
@@ -60,8 +53,7 @@ def job():
     os.symlink(os.path.abspath(file_path), latest_path)
 
 while 1:
-    mode = get_operating_mode()
-    if mode == "SLOW":
+    if ipc_obj.operating_mode == OperatingMode.Slow:
         job()
         time.sleep(long_sleep)
     else:

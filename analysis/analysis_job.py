@@ -4,6 +4,7 @@ from time import sleep, time
 import torch
 import json
 import shutil
+from utils import OperatingMode, ipc_data_from_path
 
 def load_deer_proxies():
     path = os.getenv("DEER_PROXIES")
@@ -48,35 +49,11 @@ def analysis_loop():
     latest_image_path = os.getenv("LATEST_IMAGE_PATH")
     print("latest_image_path:", latest_image_path)
     ipc_path = os.getenv("IPC_PATH")
+    ipc_obj = ipc_data_from_path(ipc_path)
     time_format = "%Y%m%d-%H%M%S"
-    ipc_obj = None
     long_sleep = 1
     short_sleep = 1
 
-    # TODO: move to utils
-    class OperatingMode(Enum):
-        Slow = "SLOW"
-        Fast = "FAST"
-
-    def load_ipc():
-        global ipc_obj
-        print(ipc_path)
-        with open(ipc_path, 'r') as ipc_file:
-            ipc_obj = json.loads(ipc_file.read())
-
-    # TODO: move to utils
-    def get_operating_mode():
-        global ipc_obj
-        return ipc_obj["mode"]
-
-    def set_operating_mode(mode: OperatingMode):
-        ipc_obj["mode"] = mode.value
-        ipc_json = json.dumps(ipc_obj)
-        with open(ipc_path, 'w+') as file:
-            file.write(ipc_json)
-
-    
-    load_ipc()
     real_image_path = os.path.realpath(latest_image_path)
     model = load_model()
     deer_proxies = load_deer_proxies()
@@ -86,7 +63,8 @@ def analysis_loop():
         
         if is_deer:
             print("Detected deer. Setting operating mode to fast and saving inference")
-            set_operating_mode(OperatingMode.Fast)
+            ipc_obj.set_operating_mode(OperatingMode.Fast)
+            
             image_name = real_image_path.split("/")[-1].split(".")[0]
             file_name = image_name = real_image_path.split("/")[-1]
             #TODO: I should probably have some mechanism for movie capture start and stop
@@ -95,18 +73,8 @@ def analysis_loop():
             break
         else:
             print("Found no deer in image. Setting operating mode to slow")
-            set_operating_mode(OperatingMode.Slow)
+            ipc_obj.set_operating_mode(OperatingMode.Slow)
         
-        # load_ipc()
-        # mode = get_operating_mode()
-
-        # if mode == OperatingMode.Slow.value:
-        #     sleep_time = long_sleep
-        # else:
-        #     sleep_time = short_sleep
-        
-        # print(f"Sleep for {sleep_time} seconds...")
-        # sleep(sleep_time)
         print(f"Sleep for {short_sleep} seconds...")
         sleep(short_sleep)
 
