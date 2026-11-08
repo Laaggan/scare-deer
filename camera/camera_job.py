@@ -4,7 +4,7 @@ import datetime
 import json
 import os
 from picamera2 import Picamera2, Preview
-from utils import IpcData, OperatingMode, ipc_data_from_path
+from scare_deer_utils import IpcData, OperatingMode, ipc_data_from_path
 
 picam2 = Picamera2()
 time_format = "%Y%m%d-%H%M%S"

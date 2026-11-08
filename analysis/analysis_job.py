@@ -4,7 +4,7 @@ from time import sleep, time
 import torch
 import json
 import shutil
-from utils import OperatingMode, ipc_data_from_path
+from scare_deer_utils import OperatingMode, ipc_data_from_path
 
 def load_deer_proxies():
     path = os.getenv("DEER_PROXIES")

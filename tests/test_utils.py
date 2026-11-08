@@ -1,8 +1,7 @@
 import json
-import os
 import shutil
 
-from utils import IpcData, OperatingMode, ipc_data_from_path
+from scare_deer_utils import IpcData, OperatingMode, ipc_data_from_path
 
 test_ipc_path = "./tests/test_data/ipc.json"
 shutil.copyfile("./shared/ipc.json", "./tests/test_data/ipc.json")
