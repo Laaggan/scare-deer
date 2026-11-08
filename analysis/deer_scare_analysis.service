@@ -5,9 +5,9 @@ BindsTo=deer_scare_camera.service
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/scare-deer/scare-deer
-EnvironmentFile=analysis/.env
-ExecStart=analysis/.analysis_env/bin/python3 -m analysis.main
+WorkingDirectory=/opt/scare-deer
+EnvironmentFile=/opt/scare-deer/analysis/.env
+ExecStart=/opt/scare-deer/nalysis/.analysis_env/bin/python3 -m analysis.main
 Restart=on-failure
 RestartSec=3
 
