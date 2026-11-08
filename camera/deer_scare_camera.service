@@ -4,8 +4,9 @@ After=multi-user.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/scare-deer/scare-deer/camera
-ExecStart=/opt/scare-deer/scare-deer/camera/.camera_env/bin/python /opt/scare-deer/scare-deer/camera/camera_job.py
+WorkingDirectory=/opt/scare-deer/scare-deer
+EnvironmentFile=camera/.env
+ExecStart=camera/.camera_env/bin/python3 -m camera.main
 Restart=on-failure
 RestartSec=3
 

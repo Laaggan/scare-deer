@@ -1,10 +1,9 @@
-from enum import Enum
 import os
 from time import sleep, time
 import torch
 import json
 import shutil
-from scare_deer_utils import OperatingMode, ipc_data_from_path
+from common.scare_deer_utils import OperatingMode, ipc_data_from_path
 
 def load_deer_proxies():
     path = os.getenv("DEER_PROXIES")
@@ -40,12 +39,14 @@ def do_inference(model, image_path, deer_proxies):
             print("Detected object:", inference["name"])
             
             return (inference["name"] in deer_proxies.values(), inferences)
+            # return (inference["name"] in deer_proxies.values(), results) # return results for convenience
     else:
         print("No object detected. Setting operating mode to slow")
         return (False, None)
 
 
 def analysis_loop():
+    inferences_path = os.getenv("INFERENCES_PATH")
     latest_image_path = os.getenv("LATEST_IMAGE_PATH")
     print("latest_image_path:", latest_image_path)
     ipc_path = os.getenv("IPC_PATH")
@@ -64,13 +65,7 @@ def analysis_loop():
         if is_deer:
             print("Detected deer. Setting operating mode to fast and saving inference")
             ipc_obj.set_operating_mode(OperatingMode.Fast)
-            
-            image_name = real_image_path.split("/")[-1].split(".")[0]
-            file_name = image_name = real_image_path.split("/")[-1]
-            #TODO: I should probably have some mechanism for movie capture start and stop
-            shutil.copyfile(real_image_path, f"../shared/inferences/{file_name}")
-            inferences.to_pickle(f"../shared/inferences/{image_name}.pkl")
-            break
+            save_inference(real_image_path, inferences_path, inferences)
         else:
             print("Found no deer in image. Setting operating mode to slow")
             ipc_obj.set_operating_mode(OperatingMode.Slow)
@@ -78,4 +73,12 @@ def analysis_loop():
         print(f"Sleep for {short_sleep} seconds...")
         sleep(short_sleep)
 
-# analysis_loop()
+def save_inference(real_image_path, inferences_path, inferences):
+    image_name = real_image_path.split("/")[-1].split(".")[0]
+    file_name = image_name = real_image_path.split("/")[-1]
+    #TODO: I should probably have some mechanism for movie capture start and stop
+    shutil.copyfile(real_image_path, f"{inferences_path}/{file_name}")
+    inferences.to_pickle(f"{inferences_path}/{image_name}.pkl")
+
+if __name__ == "__main__":
+    analysis_loop()

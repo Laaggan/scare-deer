@@ -1,6 +1,6 @@
 import pytest
 import os
-from analysis.analysis_job import load_model, load_deer_proxies, do_inference
+from analysis.main import load_model, load_deer_proxies, do_inference
 
 BASE_IMAGE_PATH="./tests/example_images"
 

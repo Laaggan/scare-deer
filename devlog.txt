@@ -64,3 +64,7 @@ when I did a test deploy to detect our cat in our apartment before trying to dep
 So today I finally came to making a small test suite so I am not bound by manual testing and can maybe figure out why the cat was not detected.
 Next step I guess is to create some fixture for testing E2E-system maybe? A fake camera where I can add some images to validate the IPC and
 slow vs fast recording modes.
+
+# 2026-11-8
+Don't know what I did today. But no E2E-tests really. But some more unit tests and then I refactored to follow some more python convections.
+Will probably do a test run with the cat at home tomorrow.

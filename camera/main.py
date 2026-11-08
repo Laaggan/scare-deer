@@ -1,10 +1,9 @@
 # import schedule
 import time
 import datetime
-import json
 import os
 from picamera2 import Picamera2, Preview
-from scare_deer_utils import IpcData, OperatingMode, ipc_data_from_path
+from common.scare_deer_utils import OperatingMode, ipc_data_from_path
 
 picam2 = Picamera2()
 time_format = "%Y%m%d-%H%M%S"
@@ -52,16 +51,17 @@ def job():
     
     os.symlink(os.path.abspath(file_path), latest_path)
 
-while 1:
-    if ipc_obj.operating_mode == OperatingMode.Slow:
-        job()
-        time.sleep(long_sleep)
-    else:
-        job()
-        time.sleep(short_sleep)
+if __name__ == "__main__":
+    while 1:
+        if ipc_obj.operating_mode == OperatingMode.Slow:
+            job()
+            time.sleep(long_sleep)
+        else:
+            job()
+            time.sleep(short_sleep)
 
-    loop_time = datetime.datetime.now()
-    
-    if loop_time > (start_time + cleanup_interval):
-        cleanup(start_time)
-        start_time = datetime.datetime.now()
+        loop_time = datetime.datetime.now()
+        
+        if loop_time > (start_time + cleanup_interval):
+            cleanup(start_time)
+            start_time = datetime.datetime.now()
