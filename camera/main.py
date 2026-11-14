@@ -3,14 +3,15 @@ import time
 import datetime
 import os
 from picamera2 import Picamera2, Preview
-from common.scare_deer_utils import OperatingMode, ipc_data_from_path
+from common.scare_deer_utils import OperatingMode, ipc_data_from_path, TIME_FORMAT
 
 picam2 = Picamera2()
-time_format = "%Y%m%d-%H%M%S"
 ipc_path = os.getenv("IPC_PATH")
 ipc_obj = ipc_data_from_path(ipc_path)
 
 images_path = os.getenv("IMAGES_PATH")
+if not os.path.exists(images_path):
+    os.makedirs(images_path)
 long_sleep = 1
 short_sleep = 0.1
 start_time = datetime.datetime.now()
@@ -27,7 +28,7 @@ def cleanup(clean_until_time):
             continue
 
         time_str = file.split("/")[-1][:-4]
-        time = datetime.datetime.strptime(time_str, time_format)
+        time = datetime.datetime.strptime(time_str, TIME_FORMAT)
         
         if time < clean_until_time:
             file_path = os.path.join(images_path, file)
@@ -37,8 +38,7 @@ def cleanup(clean_until_time):
 
 
 def job():
-    global time_format
-    timestr = time.strftime(time_format)
+    timestr = time.strftime(TIME_FORMAT)
     file_name = f"{timestr}.jpg"
     file_path = f"{images_path}/{file_name}"
     

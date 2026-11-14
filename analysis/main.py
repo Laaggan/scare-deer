@@ -47,11 +47,13 @@ def do_inference(model, image_path, deer_proxies):
 
 def analysis_loop():
     inferences_path = os.getenv("INFERENCES_PATH")
+    if not os.path.exists(inferences_path):
+        os.makedirs(inferences_path)
+    #TODO: right now we blindly hope that camera service has created path
     latest_image_path = os.getenv("LATEST_IMAGE_PATH")
     print("latest_image_path:", latest_image_path)
     ipc_path = os.getenv("IPC_PATH")
     ipc_obj = ipc_data_from_path(ipc_path)
-    time_format = "%Y%m%d-%H%M%S"
     long_sleep = 1
     short_sleep = 1
 

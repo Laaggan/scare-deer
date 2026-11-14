@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from enum import Enum
 import json
 
+TIME_FORMAT = "%Y%m%d-%H%M%S"
+
 class OperatingMode(Enum):
         Slow = "SLOW"
         Fast = "FAST"
