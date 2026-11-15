@@ -39,11 +39,12 @@ def do_inference(model, image_path, inferences_path, deer_proxies):
         for i, inference in inferences.iterrows():
             print("Detected object:", inference["name"])
             
-            return (inference["name"] in deer_proxies.values(), inferences, tmp_image_path, file_name)
-            # return (inference["name"] in deer_proxies.values(), results) # return results for convenience
+            if inference["name"] in deer_proxies.values():
+                return (True, inferences, tmp_image_path, file_name)
     else:
-        print("No object detected. Setting operating mode to slow")
-        return (False, None, tmp_image_path, file_name)
+        print("No object detected.")
+    
+    return (False, None, tmp_image_path, file_name)
 
 
 def analysis_loop():
