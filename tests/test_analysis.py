@@ -23,6 +23,7 @@ def test_detect_deer(image_path):
     is_deer, inferences = do_inference(model, os.environ["LATEST_IMAGE_PATH"], deer_proxies)
     assert is_deer
 
+#TODO: The cat should be detected as a deer and actually fail this test
 @pytest.mark.parametrize("image_path", [f"{BASE_IMAGE_PATH}/linus_siri.jpg", f"{BASE_IMAGE_PATH}/empty_field.jpg"])
 def test_detect_no_deer(image_path):
     os.environ["LATEST_IMAGE_PATH"] = image_path
