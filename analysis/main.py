@@ -22,12 +22,13 @@ def load_model():
     print("YOLO model loaded!")
     return model
 
-def do_inference(model, image_path, deer_proxies):
+def do_inference(model, image_path, inferences_path, deer_proxies):
     real_image_path = os.path.realpath(image_path)
+    tmp_image_path, file_name = save_current_latest(real_image_path, inferences_path)
 
     start = time()
     # Run inference on latest image
-    results = model([real_image_path])
+    results = model([tmp_image_path])
     print("Inference OK!")
     end = time()
     print(f"Inference took {end - start} seconds")
@@ -38,17 +39,18 @@ def do_inference(model, image_path, deer_proxies):
         for i, inference in inferences.iterrows():
             print("Detected object:", inference["name"])
             
-            return (inference["name"] in deer_proxies.values(), inferences)
+            return (inference["name"] in deer_proxies.values(), inferences, tmp_image_path, file_name)
             # return (inference["name"] in deer_proxies.values(), results) # return results for convenience
     else:
         print("No object detected. Setting operating mode to slow")
-        return (False, None)
+        return (False, None, tmp_image_path, file_name)
 
 
 def analysis_loop():
     inferences_path = os.getenv("INFERENCES_PATH")
     if not os.path.exists(inferences_path):
         os.makedirs(inferences_path)
+
     #TODO: right now we blindly hope that camera service has created path
     latest_image_path = os.getenv("LATEST_IMAGE_PATH")
     print("latest_image_path:", latest_image_path)
@@ -57,17 +59,16 @@ def analysis_loop():
     long_sleep = 1
     short_sleep = 1
 
-    real_image_path = os.path.realpath(latest_image_path)
     model = load_model()
     deer_proxies = load_deer_proxies()
 
     while 1:
-        is_deer, inferences = do_inference(model, latest_image_path, deer_proxies)
+        is_deer, inferences, tmp_image_path, file_name = do_inference(model, latest_image_path, inferences_path, deer_proxies)
         
         if is_deer:
             print("Detected deer. Setting operating mode to fast and saving inference")
             ipc_obj.set_operating_mode(OperatingMode.Fast)
-            save_inference(real_image_path, inferences_path, inferences)
+            save_inference(tmp_image_path, file_name, inferences_path, inferences)
         else:
             print("Found no deer in image. Setting operating mode to slow")
             ipc_obj.set_operating_mode(OperatingMode.Slow)
@@ -75,11 +76,19 @@ def analysis_loop():
         print(f"Sleep for {short_sleep} seconds...")
         sleep(short_sleep)
 
-def save_inference(real_image_path, inferences_path, inferences):
-    image_name = real_image_path.split("/")[-1].split(".")[0]
-    file_name = image_name = real_image_path.split("/")[-1]
+def save_current_latest(real_image_path, inferences_path):
+    file_name = real_image_path.split("/")[-1]
+    #TODO: you could probably use a path object here instead?
+    #TODO: This tmp path is floating in two places right now in a not nice way
+    tmp_path = f"{inferences_path}/tmp"
+    shutil.copyfile(real_image_path, tmp_path)
+    return tmp_path, file_name
+
+
+def save_inference(tmp_path, file_name, inferences_path, inferences):
     #TODO: I should probably have some mechanism for movie capture start and stop
-    shutil.copyfile(real_image_path, f"{inferences_path}/{file_name}")
+    shutil.copyfile(tmp_path, f"{inferences_path}/{file_name}")
+    image_name = file_name.split('.')[0]
     inferences.to_pickle(f"{inferences_path}/{image_name}.pkl")
 
 if __name__ == "__main__":
