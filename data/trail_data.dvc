@@ -1,0 +1,6 @@
+outs:
+- md5: c08536d33ec85164a696ff03e2eb8e11.dir
+  size: 574318152
+  nfiles: 2625
+  hash: md5
+  path: trail_data

@@ -60,3 +60,13 @@ python camera/main.py             # TODO: actual entry points
 - Night-time detection (IR?)
 - Close the loop: automatic deterrence on detection
 - Stats over time: when do the deer actually show up?
+
+
+## DVC note
+This is what an example config file can look like
+[core]
+    remote = storage
+['remote "storage"']
+    url = gdrive://1GTzXxY4hTnXadqzvdJ3Xxju-ifgcihJK
+    gdrive_client_id = 1078011869685-21braonfnk64t96h54b3p0flh3ujhenf.apps.googleusercontent.com
+    gdrive_client_secret = '<your secret>'
